@@ -1,5 +1,3 @@
-require \source-map-support .install!
-require \yap-require-hook .install!
 require \./helpers/gm
 
 

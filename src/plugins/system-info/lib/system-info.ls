@@ -1,5 +1,5 @@
 require! <[colors fs os http]>
-ifconfig = require \wireless-tools/ifconfig
+ifconfig = require \./ifconfig
 {DBG, ERR, WARN, INFO} = global.get-logger __filename
 {lodash_merge, lodash_find, yapps_utils} = global.get-bundled-modules!
 {PRETTIZE_KVS, PRINT_PRETTY_JSON} = yapps_utils.debug

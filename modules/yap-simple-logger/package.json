@@ -1,0 +1,26 @@
+{
+  "name": "yap-simple-logger",
+  "author": {
+    "name": [
+      "Yagamy"
+    ],
+    "email": "yagamy@gmail.com"
+  },
+  "description": "a simple console logger with color outputs",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "main": "index",
+  "engines": {
+    "node": "0.10.x",
+    "npm": "1.4.x"
+  },
+  "dependencies": {
+    "colors": "*",
+    "moment": "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}

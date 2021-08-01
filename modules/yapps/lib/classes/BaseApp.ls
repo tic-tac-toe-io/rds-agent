@@ -1,5 +1,6 @@
-require! <[fs path colors mkdirp yap-require-hook]>
+require! <[fs path colors mkdirp ]>
 require! <[async eventemitter2 handlebars]>
+{yap-require-hook} = global.yap-context.preloads
 global.add-bundled-module {async, eventemitter2, handlebars}
 
 {DBG, ERR, WARN, INFO} = global.get-logger __filename
