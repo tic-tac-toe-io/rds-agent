@@ -1,0 +1,32 @@
+{
+  "name": "rds-agent",
+  "author": {
+    "name": "yagamy",
+    "email": "yagamy@t2t.io"
+  },
+  "description": "Device Agent for Remote Device Diagnosis",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tic-tac-toe-io/rds-agent"
+  },
+  "main": "index",
+  "license": "MIT",
+  "dependencies": {
+    "async": "^2.6.1",
+    "colors": "^1.4.0",
+    "livescript": "^1.6.0",
+    "lodash": "^4.17.21",
+    "mkdirp": "^0.5.5",
+    "moment": "^2.29.1",
+    "node-pty": "^0.10.0",
+    "request": "^2.88.0",
+    "socket.io-client": "^4.1.3",
+    "systeminformation": "^5.7.13"
+  },
+  "devDependencies": {
+    "conventional-changelog-cli": "^2.0.23",
+    "standard-version": "^9.3.1"
+  },
+  "optionalDependencies": {}
+}

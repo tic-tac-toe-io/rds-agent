@@ -102,3 +102,6 @@ dist
 
 # TernJS port file
 .tern-port
+
+# Ignore all temporary & backup directories for `node_modules`
+node_modules_bak*/

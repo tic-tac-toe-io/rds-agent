@@ -1,0 +1,29 @@
+{
+  "name": "yapps",
+  "author": {
+    "name": [
+      "Yagamy"
+    ],
+    "email": "yagamy@gmail.com"
+  },
+  "description": "the app framework for nodejs applications on embedded linux system",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "main": "index",
+  "engines": {
+    "node": "8.x",
+    "npm": "1.4.x"
+  },
+  "dependencies": {
+    "async": "^2.6.1",
+    "colors": "^1.3.0",
+    "lodash": "^4.17.15",
+    "mkdirp": "^0.5.1",
+    "moment": "*"
+  },
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
