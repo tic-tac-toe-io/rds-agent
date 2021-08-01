@@ -105,3 +105,12 @@ dist
 
 # Ignore all temporary & backup directories for `node_modules`
 node_modules_bak*/
+
+# Ignore node-version-manager files
+#   - `.n-node-version`: version on single line. Custom to `n`.
+#   - `.node-version`: version on single line. Used by multiple tools: node-version-usage
+#   - `.nvmrc`: version on single line. Used by `nvm`.
+#
+.node-version
+.n-node-version
+.nvmrc
