@@ -1,4 +1,5 @@
 require \./helpers/gm
+require! <[yargs]>
 
 
 PRINT_HELP = (opt) ->
@@ -25,7 +26,8 @@ PRINT_YAPPS_ENVS = ->
 module.exports = exports =
   init: (app_filename) ->
     console.log "[yapps] arguments: #{JSON.stringify process.argv}"
-    opt = (require \optimist).usage 'Usage: $0'
+    opt = yargs
+      .usage 'Usage: $0'
       .alias    \c, \config
       .describe \c, 'the name of deployment configuration, e.g. production, development, testing...'
       .default  \c, \default
