@@ -1,16 +1,13 @@
-require! <[colors fs os http]>
-ifconfig = require \./ifconfig
+require! <[colors fs os http systeminformation]>
 {DBG, ERR, WARN, INFO} = global.get-logger __filename
 {lodash_merge, lodash_find, yapps_utils} = global.get-bundled-modules!
 {PRETTIZE_KVS, PRINT_PRETTY_JSON} = yapps_utils.debug
-get-net-interfaces = require \./helpers/get-net-interfaces
 get-distro-info = require \./helpers/get-distro-info
 get-board-info = require \./helpers/get-board-info
 si = require \systeminformation
 
 
 const TTT_SYSTEM_FILEPATH = \/tmp/ttt_system
-const DUMMY_INTERFACE = mac: \ff:ff:ff:ff:ff:ff, ipv4: \0.0.0.0
 const LOCALHOST = \127.0.0.1
 
 const TTT_DEFAULTS =
@@ -120,14 +117,9 @@ class SystemInfo
     {id} = ttt
     {hostname} = os
     {env, pid} = process
-    {SYSTEM_INFO_ID} = env
     context[\id] = "#{hostname.to-upper-case!}"
-    context[\id] = "#{context.id}_#{mac_address.to-upper-case!}" if mac_address?
-    context[\id] = SYSTEM_INFO_ID if SYSTEM_INFO_ID?
+    context[\id] = "#{context.id}_112233445566"
     context[\id] = id if id? and id isnt ""
-    INFO "ttt.id is empty => #{ttt.id is ''}"
-    INFO "ttt.id is null => #{ttt.id?}"
-    INFO "ttt => #{JSON.stringify ttt}"
     ttt.id = context.id if ttt.id is ""
     {id} = context
     uptime = (new Date!) - Math.floor process.uptime! * 1000
@@ -156,11 +148,26 @@ class SystemInfo
         WARN error, "unexpected error when reading/parsing #{TTT_SYSTEM_FILEPATH}"
       return done!
 
-  check-ttt-id: ->
+  check-ttt-id: (interfaces) ->
     {context} = self = @
-    {ttt, mac_address, distro} = context
+    {ttt, distro} = context
     {kernel, architecture} = distro.uname
     return if ttt.id isnt ""
+    xs = [ x for x in interfaces when x.mac isnt '' and x.ip4 isnt '' and x.ip4 isnt '127.0.0.1' and not x.iface.startsWith 'feth' ]
+    xs = [ x for x in interfaces when x.mac isnt '' and x.ip4 isnt '' and x.ip4 isnt '127.0.0.1' ] if xs.length is 0
+    xs = [ x for x in interfaces when x.mac isnt '' and x.ip4 isnt '' ] if xs.length is 0
+    if xs.length is 0
+      xs = [ x.iface for x in interfaces ]
+      INFO "no network interfaces to be selected to generate identity: #{xs.join ','}"
+      mac_address = context['mac_address'] = '11:22:33:44:55:66'
+      ipv4 = context['ipv4'] = '0.0.0.0'
+    else
+      netif = xs[0]
+      INFO "the interface #{netif.iface.cyan} is selected to generate identity => #{PRETTIZE_KVS netif}"
+      mac_address = context['mac_address'] = netif.mac
+      ipv4 = context['ipv4'] = netif.ip4
+    mac_address = mac_address.split ':'
+    mac_address = mac_address.join ''
     ttt.id = "#{context.os.hostname.toLowerCase!}-#{mac_address}" if kernel is \darwin and architecture is \x86_64
     ttt.id = "#{context.os.hostname.toLowerCase!}-#{mac_address}" if /^raspberry\ /i .test context.system.manufacturer
     ttt.id = "am33xx-#{mac_address}" if /\ am33xx\ /i .test context.system.model
@@ -201,11 +208,6 @@ class SystemInfo
     node_platform = process.platform
     context[\runtime] = {node_version, node_arch, node_platform}
     context[\cwd] = process.cwd!
-    context[\mac_address] = mac = \11:22:33:44:55:66
-    context[\iface] = name: \enx112233445566, iface: {ipv4:\0.0.0.0, mac:mac}
-    (err1, results) <- get-net-interfaces # results := {mac_address, iface: {name, iface: {ipv4, mac}}, interfaces}
-    return done err1 if err1?
-    self.context <<< results
     (err2, distro) <- get-distro-info   # distro := {name, arch, uname: {kernel, architecture, release}, dist: {name, codename}}
     return done err2 if err2?
     self.context <<< {distro}
@@ -223,7 +225,9 @@ class SystemInfo
     self.context.os.hostname = hostname
     (ttt-err) <- self.update-ttt-system
     return done ttt-err if ttt-err?
-    self.check-ttt-id!
+    (interfaces) <- systeminformation.networkInterfaces
+    context['interfaces'] = interfaces
+    self.check-ttt-id interfaces
     self.check-ttt-sn!
     # console.log "context:\n#{JSON.stringify self.context, null, '  '}"
     return done!
