@@ -34,7 +34,10 @@ argv = [ x for x in process.argv ]
 [a1, a2] = argv
 a1 = path.basename a1 if a1?
 a2 = path.basename a2 if a2?
-entry = if a1? and a2? and a1 is \node and a2 is \lsc then argv[2] else argv[1]
+entry = argv[1]
+if a1? and a2? and a1 is \node
+  entry = argv[2] if a2 is \lsc
+  entry = process.env['pm_exec_path'] if a2 is \ProcessContainerFork.js
 
 # Setup the default program name.
 #
