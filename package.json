@@ -22,7 +22,7 @@
     "lodash": "^4.17.21",
     "mkdirp": "^0.5.5",
     "moment": "^2.29.1",
-    "node-pty": "^0.10.0",
+    "node-pty": "^1.0.0",
     "prettyjson": "^1.2.1",
     "request": "^2.88.0",
     "serialize-error": "^2.1.0",
