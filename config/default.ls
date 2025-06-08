@@ -26,6 +26,7 @@ _metadata:
 
 \system-info :
   verbose: yes
+  ttt_max_read_attempts: 3
   ttt_defaults:
     profile: \misc
     profile_version: \19700101a

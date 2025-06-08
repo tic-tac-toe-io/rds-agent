@@ -4,10 +4,10 @@ require! <[colors fs os http systeminformation]>
 {PRETTIZE_KVS, PRINT_PRETTY_JSON} = yapps_utils.debug
 get-distro-info = require \./helpers/get-distro-info
 get-board-info = require \./helpers/get-board-info
+get-ttt-system = require \./helpers/get-ttt-system
 si = require \systeminformation
 
 
-const TTT_SYSTEM_FILEPATH = \/tmp/ttt_system
 const LOCALHOST = \127.0.0.1
 
 const TTT_DEFAULTS =
@@ -130,22 +130,23 @@ class SystemInfo
     return done!
 
   update-ttt-system: (done) ->
-    {context} = @
+    {context, opts} = @
+    {ttt_max_read_attempts} = opts
+    ttt_max_read_attempts = 3 unless ttt_max_read_attempts?
     start = new Date!
-    (err, buffer) <- fs.readFile TTT_SYSTEM_FILEPATH
+    (err, text) <- get-ttt-system ttt_max_read_attempts
     if err?
-      WARN err, "failed to read #{TTT_SYSTEM_FILEPATH}"
+      WARN err, "failed to read /tmp/ttt_system"
       return done!
     else
       duration = (new Date!) - start
       try
-        text = "#{buffer}"
         xs = text.split '\n'
         xs = [ (x.split '\t') for x in xs when x isnt "" ]
         xs = { [x[0], (if x[1]? then x[1].trim! else x[1])] for x in xs }
         context['ttt'] <<< xs
       catch error
-        WARN error, "unexpected error when reading/parsing #{TTT_SYSTEM_FILEPATH}"
+        WARN error, "unexpected error when reading/parsing /tmp/ttt_system"
       return done!
 
   check-ttt-id: (interfaces) ->

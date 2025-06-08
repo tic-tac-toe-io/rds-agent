@@ -127,6 +127,7 @@ class TTYSocket
     (err, rsp, body) <- request.post {json, uri, body}
     return done "lookup-server => fallback to use #{server-url.cyan} because of #{err}" if err?
     return done "lookup-server => fallback to use #{server-url.cyan} because of non-200 response code: #{rsp.statusCode} (#{rsp.statusMessage.red})" unless rsp.statusCode is 200
+    console.log body
     {data} = body
     return done "lookup-server => fallback to use #{server-url.cyan} because of missing _data_ field in response" unless data?
     {url} = data
